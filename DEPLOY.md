@@ -1,59 +1,47 @@
 # Deploying tech2wild.com
 
-The site is a static Vite build (`npm run build` → `dist/`). Keep the domain registered at GoDaddy and host the files on Cloudflare Pages, which rebuilds and deploys on every push to `main`.
+The site is a static Vite build (`npm run build` → `dist/`). The domain stays registered at GoDaddy; hosting and DNS are on Cloudflare (free plan). Every push to `main` rebuilds and deploys.
 
-## One-time setup
+## Current state (2026-09-08)
 
-### 1. Push the repo to GitHub
+| Piece | Status |
+|---|---|
+| GitHub repo | `tonyd2wild/tech2wild-site` (public), branch `main` |
+| Cloudflare Pages project | `tech2wild-site` → live at <https://tech2wild-site.pages.dev> |
+| Build settings | command `npm run build`, output `dist`, production branch `main` |
+| Cloudflare DNS zone | `tech2wild.com` added (Free plan), status **pending** until nameservers change |
+| Cloudflare nameservers | `dimitris.ns.cloudflare.com`, `karina.ns.cloudflare.com` |
+| GoDaddy nameservers (to replace) | `ns49.domaincontrol.com`, `ns50.domaincontrol.com` |
+| Zone records kept | `www` CNAME → tech2wild.com, `pay` CNAME → GoDaddy paylinks, `_domainconnect` CNAME, `_dmarc` TXT |
+| Zone records removed | two GoDaddy parking `A` records on `@` |
+| Pages custom domain | **not yet attached** (Cloudflare requires the zone to be active first) |
 
-```bash
-cd C:\Users\tonyd\tech2wild-site
-git remote add origin https://github.com/tonyd2wild/tech2wild-site.git
-git push -u origin main
+## Remaining steps
+
+### 1. GoDaddy: switch nameservers (Tony)
+
+GoDaddy → My Products → tech2wild.com → **DNS** → **Nameservers** → **Change** → *I'll use my own nameservers*:
+
+```
+dimitris.ns.cloudflare.com
+karina.ns.cloudflare.com
 ```
 
-(Create the empty repo at <https://github.com/new> first. Private is fine; Cloudflare only needs read access.)
+Remove `ns49.domaincontrol.com` and `ns50.domaincontrol.com`, save. If GoDaddy shows a DNSSEC toggle, make sure it is off. Propagation is usually minutes, worst case a few hours. Cloudflare emails when the zone goes active.
 
-### 2. Create the Cloudflare Pages project
+### 2. Cloudflare Pages: attach the custom domain
 
-1. <https://dash.cloudflare.com> → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-2. Pick `tonyd2wild/tech2wild-site`.
-3. Build settings:
-   - Framework preset: **Vite**
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Node version: add environment variable `NODE_VERSION` = `20`
-4. Save and Deploy. You get a `*.pages.dev` URL in about a minute. Check it before touching DNS.
+Pages project → **Custom domains** → **Set up a custom domain** → `tech2wild.com`, then again for `www.tech2wild.com`. Cloudflare creates the CNAME records automatically now that the zone is on Cloudflare. Certificates issue within ~15 minutes.
 
-### 3. Attach the custom domain
-
-In the Pages project → **Custom domains** → **Set up a custom domain** → enter `tech2wild.com`, then repeat for `www.tech2wild.com`.
-
-Cloudflare will show the exact records it wants. There are two ways to satisfy them:
-
-**Option A — keep DNS at GoDaddy (simplest, no nameserver change).**
-In GoDaddy → My Products → tech2wild.com → **DNS** → add:
-
-| Type  | Name | Value                              | TTL  |
-|-------|------|------------------------------------|------|
-| CNAME | `www`| `tech2wild-site.pages.dev`         | 600  |
-| CNAME | `@`  | `tech2wild-site.pages.dev`         | 600  |
-
-GoDaddy allows a CNAME on `@` through its "forwarding"-free flattening. If the GoDaddy editor refuses a CNAME on `@`, use Option B.
-
-Delete any existing `A` record on `@` (GoDaddy's default parking record) and any `CNAME www` pointing at GoDaddy parking.
-
-**Option B — move DNS to Cloudflare (recommended long-term).**
-Add the site to Cloudflare (free plan), Cloudflare gives you two nameservers, and in GoDaddy → DNS → **Nameservers** → **Change** → paste them. Cloudflare then manages `tech2wild.com` and the Pages custom-domain step creates the records for you automatically. Registration and billing stay at GoDaddy.
-
-### 4. Verify
+### 3. Verify
 
 ```bash
 nslookup tech2wild.com
 curl -I https://tech2wild.com
+curl -I https://www.tech2wild.com
 ```
 
-Both `tech2wild.com` and `www.tech2wild.com` should return `200` over HTTPS. Cloudflare issues the certificate automatically; allow up to 15 minutes after DNS resolves.
+Both should return `200` over HTTPS.
 
 ## Every deploy after that
 
@@ -63,7 +51,7 @@ git commit -m "update"
 git push
 ```
 
-Cloudflare rebuilds in ~60 s. Pull requests get their own preview URL.
+Cloudflare rebuilds in about a minute. Pull requests get their own preview URL.
 
 ## Files that matter for hosting
 
