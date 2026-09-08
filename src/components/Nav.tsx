@@ -41,7 +41,16 @@ export function Nav() {
         </nav>
         <div className="nav__right">
           <div className="nav__status mono"><span className="led led--live" /> LAB ONLINE · ATL {time}</div>
-          <a className="nav__cta" href={channel.url} target="_blank" rel="noreferrer" data-cursor="watch">Subscribe</a>
+          <div className="nav__ctas">
+            <a className="nav__cta nav__cta--x" href={xProfile.url} target="_blank" rel="noreferrer" data-cursor="follow" aria-label="Follow @Tech2Wild on X">
+              <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden><path fill="currentColor" d="M18.9 2H22l-7.2 8.3L23.3 22h-6.6l-5.2-6.8L5.6 22H2.4l7.7-8.8L1.6 2h6.8l4.7 6.2L18.9 2zm-1.2 18h1.8L7.2 3.9H5.3L17.7 20z"/></svg>
+              Follow
+            </a>
+            <a className="nav__cta nav__cta--yt" href={channel.url} target="_blank" rel="noreferrer" data-cursor="watch" aria-label="Subscribe to Tech2WiLD on YouTube">
+              <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+              Subscribe
+            </a>
+          </div>
           <button className={`nav__burger ${open ? 'is-open' : ''}`} onClick={() => setOpen(v => !v)} aria-label="Menu" aria-expanded={open}>
             <span /><span />
           </button>
