@@ -34,11 +34,12 @@ export default function App() {
     if (!ready) return
     const path = window.location.pathname.replace(/\/+$/, '')
     if (path === JOIN_PATH || window.location.hash === '#join') {
-      const t = setTimeout(() => {
-        scrollToTarget('#join', -40)
-        if (path === JOIN_PATH) window.history.replaceState(null, '', '/#join')
-      }, 900)
-      return () => clearTimeout(t)
+      // Two passes: the page keeps growing while lazy images and fonts land, so a single early
+      // scroll can undershoot on slow connections and mobile.
+      const go = () => scrollToTarget('#join', -40)
+      const t1 = setTimeout(() => { go(); if (path === JOIN_PATH) window.history.replaceState(null, '', '/#join') }, 900)
+      const t2 = setTimeout(go, 3200)
+      return () => { clearTimeout(t1); clearTimeout(t2) }
     }
   }, [ready])
 
