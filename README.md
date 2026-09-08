@@ -50,3 +50,13 @@ src/
 ## Updating content
 
 Edit the files in `src/data/`. Each deployment, video, post and repo is a plain object; hardware colors and model-family accents live in `src/data/models.ts`.
+
+For a full refresh, run the sweep and follow the report:
+
+```bash
+npm run sweep -- --apply   # refresh stars / dates / stats, list new repos, videos, applications
+npm run build
+npm run smoke              # headless screenshots + console-error check
+```
+
+The agent procedure (what to add, how to read READMEs for numbers, how to verify and deploy) is in [`skills/tech2wild-site-sweep/SKILL.md`](skills/tech2wild-site-sweep/SKILL.md). Live-site deployment details are in [`DEPLOY.md`](DEPLOY.md).
