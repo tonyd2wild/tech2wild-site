@@ -1,0 +1,12 @@
+.mani { position: relative; background: var(--bg); border-top: 1px solid var(--line); overflow: hidden; }
+.mani__pin { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+.mani__ring { position: absolute; left: 50%; top: 45%; width: min(70vw, 720px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid var(--line-2); box-shadow: 0 0 0 40px rgba(200,255,61,.02), 0 0 120px rgba(200,255,61,.08) inset; opacity: .35; pointer-events: none; }
+.mani__stage { position: relative; display: grid; place-items: center; text-align: center; padding: 0 var(--gutter); }
+.mani__line { font-family: var(--f-display); font-weight: 800; font-size: clamp(38px, 9vw, 140px); letter-spacing: -0.05em; line-height: 0.95; font-variation-settings: 'wdth' 90; text-wrap: balance; }
+.mani--pinned .mani__line { grid-area: 1 / 1; opacity: 0; will-change: transform, opacity, filter; }
+.mani--static .mani__pin { min-height: auto; padding: clamp(96px, 12vw, 160px) 0 40px; }
+.mani--static .mani__stage { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; text-align: left; }
+.mani--static .mani__line { font-size: clamp(36px, 10vw, 96px); }
+.mani__foot { position: relative; margin-top: clamp(30px, 6vh, 80px); padding-bottom: 40px; }
+.mani--pinned .mani__foot { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding-bottom: 32px; }
+.mani__thesis { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }

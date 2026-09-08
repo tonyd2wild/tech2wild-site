@@ -1,0 +1,282 @@
+export type Hardware = '2x DGX Spark' | '4x DGX Spark' | '2x RTX 3090' | '4x RTX 3090' | '1x RTX 3090' | '3x DGX Spark'
+
+export interface Deployment {
+  id: string
+  model: string
+  family: 'DeepSeek' | 'GLM' | 'Qwen' | 'MiniMax' | 'MiMo' | 'Hunyuan' | 'poolside'
+  params: string
+  active?: string
+  quant: string
+  hardware: Hardware
+  engine: string
+  tps: number          // representative single-stream decode tok/s
+  tpsPeak?: number     // peak observed
+  tpsNote: string
+  aggregate?: number   // aggregate tok/s under concurrency
+  aggregateNote?: string
+  context: number      // tokens
+  kvPool?: number      // tokens
+  status: 'LIVE' | 'RECIPE' | 'ARCHIVED'
+  repo: string
+  stars: number
+  spec: string         // speculative decoding technique
+  highlight?: string
+  video?: string
+}
+
+export const deployments: Deployment[] = [
+  {
+    id: 'ds4-vision-2spark',
+    model: 'DeepSeek V4 Flash Vision',
+    family: 'DeepSeek',
+    params: '284B', active: '13B',
+    quant: 'NVFP4 KV (nvfp4_ds_mla)',
+    hardware: '2x DGX Spark', engine: 'vLLM TP2 · DSpark k=5',
+    tps: 67.6, tpsPeak: 84.3, tpsNote: 'mean single-stream / peak',
+    aggregate: 197.3, aggregateNote: 'c6 aggregate',
+    context: 1_048_576, kvPool: 2_040_000,
+    status: 'LIVE',
+    repo: 'DeepSeek-v4-Flash-Vision-Exp-DSpark-1M-NVFP4-KV-2x-DGX-Spark', stars: 464,
+    spec: 'DSpark speculative decoding · B12X MoE kernels',
+    highlight: 'Full 1M context with native vision on two Sparks',
+    video: '0EIt9SdD8is',
+  },
+  {
+    id: 'ds4-tp4',
+    model: 'DeepSeek V4 Flash',
+    family: 'DeepSeek',
+    params: '284B', active: '13B',
+    quant: 'Native weights · FP8 KV',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · MTP k=2',
+    tps: 87, tpsPeak: 120, tpsNote: 'code / count prompts',
+    aggregate: 402, aggregateNote: 'c6 aggregate (count)',
+    context: 1_048_576, kvPool: 6_000_000,
+    status: 'RECIPE',
+    repo: 'Deepseek-V4-Flash-TP4-4x-DGX-Spark', stars: 6,
+    spec: 'Native MTP · switched 200GbE RoCE',
+    highlight: 'TP4 is faster than TP2 once the fabric is fast enough',
+  },
+  {
+    id: 'glm53-flash-2spark',
+    model: 'GLM-5.3 Flash',
+    family: 'GLM',
+    params: '320B', active: '18B',
+    quant: 'NVFP4 W4A4 · fp8 KV',
+    hardware: '2x DGX Spark', engine: 'vLLM TP2 · DFlash2',
+    tps: 46.9, tpsPeak: 60.6, tpsNote: 'code prompt / peak single-stream',
+    aggregate: 56.2, aggregateNote: 'c5 aggregate',
+    context: 262_144, kvPool: 581_040,
+    status: 'LIVE',
+    repo: 'GLM-5.3-Flash-NVFP4-DFlash2-2x-DGX-Spark', stars: 140,
+    spec: 'DFlash2 drafter · 74.1% acceptance · 2.15x over MTP-4',
+    highlight: 'First fp8 KV on consumer Blackwell for a NoPE-MLA model',
+    video: 'bD1jCH5c32g',
+  },
+  {
+    id: 'glm53-flash-4spark',
+    model: 'GLM-5.3 Flash · TP4',
+    family: 'GLM',
+    params: '320B', active: '18B',
+    quant: 'NVFP4 · fp8 KV (24 GiB/rank)',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · DFlash2',
+    tps: 36, tpsPeak: 55, tpsNote: 'MTP / DFlash2 structured',
+    context: 1_048_576, kvPool: 3_895_606,
+    status: 'RECIPE',
+    repo: 'GLM-5.3-Flash-NVFP4-1M-KV-4x-DGX-Spark', stars: 34,
+    spec: 'Unconditional page-cache flusher unlocked +54.8% KV pool',
+    highlight: '3.72x full 1M contexts in one KV pool',
+  },
+  {
+    id: 'glm53-full',
+    model: 'GLM-5.3 (full)',
+    family: 'GLM',
+    params: '743B', active: '40B',
+    quant: 'Int4-Int8Mix (first anywhere) · NVFP4 KV',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · DFlash2 k=7',
+    tps: 53.32, tpsNote: 'DFlash2 structured output',
+    aggregate: 46.03, aggregateNote: 'c6 aggregate (MTP-4)',
+    context: 300_000, kvPool: 317_278,
+    status: 'RECIPE',
+    repo: 'GLM-5.3-Int4-Int8Mix-TP4-4x-DGX-Spark', stars: 10,
+    spec: '1507 GB BF16 → 377.4 GiB · 282 shards · weights on HF',
+    highlight: 'A frontier-scale 743B model served on four desktop boxes',
+  },
+  {
+    id: 'glm52-nvfp4kv',
+    model: 'GLM-5.2',
+    family: 'GLM',
+    params: '744B', active: '40B',
+    quant: 'QuantTrio Int4-Int8Mix · true 4-bit NVFP4 KV',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · MTP',
+    tps: 42, tpsNote: 'peak decode',
+    context: 316_000, kvPool: 317_000,
+    status: 'ARCHIVED',
+    repo: 'GLM-5.2-NVFP4-KV-4x-DGX-Spark-300kctx-42tok-s', stars: 14,
+    spec: 'Custom Triton + CuTe kernels · needle-verified at 250K depth',
+    video: 'nbHOBvLlypY',
+  },
+  {
+    id: 'glm52-655k',
+    model: 'GLM-5.2 · 655K',
+    family: 'GLM',
+    params: '744B', active: '40B',
+    quant: 'Int4-Int8Mix · fp8_ds_mla KV',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · DCP4 · MTP k=3',
+    tps: 23, tpsNote: 'single-stream',
+    aggregate: 47.9, aggregateNote: 'c4 aggregate',
+    context: 655_360,
+    status: 'ARCHIVED',
+    repo: 'GLM-5.2-655K-MTP-4x-DGX-Spark---25-32tok-s', stars: 31,
+    spec: '4-way decode-context-parallelism shards KV across nodes',
+  },
+  {
+    id: 'qwen38fn-2spark',
+    model: 'Qwen3.8 Flash-Next',
+    family: 'Qwen',
+    params: '125B', active: '3B',
+    quant: 'NVFP4',
+    hardware: '2x DGX Spark', engine: 'SGLang TP2 · MTP4',
+    tps: 50, tpsPeak: 70.2, tpsNote: 'typical / peak',
+    context: 262_144, kvPool: 600_000,
+    status: 'LIVE',
+    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 49,
+    spec: '51B PLE table offloaded to host RAM · CUDA graphs · 3.5x over no-MTP',
+    highlight: 'Day-0 deployment with full vision support',
+    video: 'z8xlSd1d99A',
+  },
+  {
+    id: 'qwen38fn-4x3090',
+    model: 'Qwen3.8 Flash-Next · GGUF',
+    family: 'Qwen',
+    params: '125B', active: '3B',
+    quant: 'unsloth UD-IQ4_XS GGUF',
+    hardware: '4x RTX 3090', engine: 'llama.cpp · ngram-mod spec',
+    tps: 62, tpsNote: 'median with n-gram speculation',
+    context: 262_144,
+    status: 'LIVE',
+    repo: 'Qwen38-Flash-Next-4x3090', stars: 4,
+    spec: '2 users at full 262K context · +45% on agentic tasks',
+    highlight: 'Four Ampere cards beat the 2-Spark TP2 lane on this model',
+  },
+  {
+    id: 'qwen27b-2x3090',
+    model: 'Qwen3.8-27B',
+    family: 'Qwen',
+    params: '27B dense',
+    quant: 'AutoRound W4A16 · FP8 KV',
+    hardware: '2x RTX 3090', engine: 'vLLM TP2 · DFlash2 n=7',
+    tps: 101.1, tpsPeak: 252.9, tpsNote: 'real-agent / structured output',
+    context: 131_072, kvPool: 258_735,
+    status: 'LIVE',
+    repo: 'Qwen3.8-27B-DFLASH2-AutoRound-W4A16-2x3090', stars: 16,
+    spec: '★★★★★ #1 on the 69-scenario 2Wild eval · Quality 97.1',
+    highlight: 'The 27B dense model that topped the whole local fleet',
+    video: 'd31KL5Fc-EM',
+  },
+  {
+    id: 'qwen27b-4x3090',
+    model: 'Qwen3.8-27B · TP4',
+    family: 'Qwen',
+    params: '27B dense',
+    quant: 'AutoRound W4A16',
+    hardware: '4x RTX 3090', engine: 'vLLM TP4 · DFlash2',
+    tps: 85, tpsNote: 'single-stream',
+    context: 262_144, kvPool: 1_000_000,
+    status: 'RECIPE',
+    repo: 'Qwen3.8-27B-DFlash2-4x3090-TP4', stars: 0,
+    spec: '3.83x concurrency vs TP2 · 1M-token KV pool',
+  },
+  {
+    id: 'minimax-m3',
+    model: 'MiniMax M3',
+    family: 'MiniMax',
+    params: '428B',
+    quant: 'W4A16 GPTQ · NVFP4 KV',
+    hardware: '2x DGX Spark', engine: 'vLLM TP2 · EAGLE-3',
+    tps: 36.6, tpsNote: 'JSON (31.8 code)',
+    context: 196_000, kvPool: 208_128,
+    status: 'ARCHIVED',
+    repo: 'MiniMax-M3-2x-DGX-Spark-36-tok-s', stars: 45,
+    spec: 'Unpruned · sparse-attention layers with 2 KV heads',
+  },
+  {
+    id: 'mimo-omni',
+    model: 'MiMo-V2.5 Omni',
+    family: 'MiMo',
+    params: '230B',
+    quant: 'NVFP4 · NVFP4 KV (DiffKV)',
+    hardware: '2x DGX Spark', engine: 'vLLM TP2 · MTP',
+    tps: 32, tpsNote: 'single-stream',
+    aggregate: 184.1, aggregateNote: 'c8 aggregate',
+    context: 1_000_000, kvPool: 2_170_000,
+    status: 'ARCHIVED',
+    repo: 'MiMo-V2.5-TP2-1M-NVFP4-KV-2xDGX-Spark', stars: 40,
+    spec: 'Text + image + video + audio · 97.8/100 on tool eval',
+  },
+  {
+    id: 'hy3',
+    model: 'Hunyuan 3 (Hy3)',
+    family: 'Hunyuan',
+    params: '295B', active: '21B',
+    quant: 'NVFP4 W4A16 · FP8 KV',
+    hardware: '2x DGX Spark', engine: 'vLLM TP2 · MTP k=1',
+    tps: 21.8, tpsNote: 'single-stream',
+    aggregate: 59.7, aggregateNote: 'c6 aggregate',
+    context: 131_072,
+    status: 'ARCHIVED',
+    repo: 'Hy3-295B-NVFP4-MTP-2x-DGX-Spark', stars: 19,
+    spec: 'First published Hy3 recipe on GB10',
+  },
+  {
+    id: 'laguna',
+    model: 'Laguna-S 2.1 (poolside)',
+    family: 'poolside',
+    params: '117.6B', active: '8.5B',
+    quant: 'INT4 · FP8 KV',
+    hardware: '4x RTX 3090', engine: 'vLLM TP4 · DFlash k=7',
+    tps: 200, tpsPeak: 282.5, tpsNote: 'typical / peak decode',
+    context: 204_800,
+    status: 'ARCHIVED',
+    repo: 'Laguna-S-2.1-INT4-DFlash-4x-RTX3090-200-tok-s', stars: 2,
+    spec: 'Validated with a fresh 190K-token prompt, not boot-only',
+    highlight: 'Fastest decode in the lab',
+  },
+  {
+    id: 'glm52-2bit',
+    model: 'GLM-5.2 · 2-bit',
+    family: 'GLM',
+    params: '753B',
+    quant: '2-bit experts · FP8 attention + KV',
+    hardware: '2x DGX Spark', engine: 'TP2 · native MTP',
+    tps: 19.3, tpsPeak: 21.6, tpsNote: 'mean / peak',
+    context: 32_768,
+    status: 'ARCHIVED',
+    repo: 'GLM5.2-2bit-2-DGX-Spark--21.5tok-s', stars: 40,
+    spec: 'A 750B-class model squeezed onto two boxes',
+  },
+]
+
+export const hardwareColors: Record<Hardware, string> = {
+  '2x DGX Spark': '#C8FF3D',
+  '4x DGX Spark': '#8CFF7A',
+  '3x DGX Spark': '#A8FF5C',
+  '2x RTX 3090': '#FF7A1A',
+  '4x RTX 3090': '#FFB03B',
+  '1x RTX 3090': '#FF5C2A',
+}
+
+export const familyAccent: Record<Deployment['family'], string> = {
+  DeepSeek: '#4FA3FF',
+  GLM: '#C8FF3D',
+  Qwen: '#FF7A1A',
+  MiniMax: '#FF4FA3',
+  MiMo: '#B98CFF',
+  Hunyuan: '#3DFFD5',
+  poolside: '#FFD23D',
+}
+
+export const fmtTokens = (n: number) => {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 2).replace(/\.?0+$/, '')}M`
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`
+  return `${n}`
+}

@@ -1,0 +1,6 @@
+.ticker { position: relative; z-index: 2; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-1); padding: 14px 0; }
+.ticker__item { display: inline-flex; align-items: baseline; gap: 14px; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; }
+.ticker__item::before { content: '◆'; color: var(--acid); font-size: 8px; margin-right: 6px; }
+.ticker__model { color: var(--ink); }
+.ticker__val { color: var(--acid); font-weight: 500; }
+.ticker__note { color: var(--ink-3); }

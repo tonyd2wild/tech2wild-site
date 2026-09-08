@@ -1,0 +1,11 @@
+.preloader { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-items: center; transition: transform 0.9s cubic-bezier(0.83, 0, 0.17, 1); }
+.preloader--leave { transform: translateY(-100%); }
+.preloader__inner { width: min(560px, 86vw); position: relative; }
+.preloader__mark { font-family: var(--f-display); font-weight: 800; font-size: 14px; letter-spacing: 0.3em; color: var(--acid); margin-bottom: 26px; }
+.preloader__log { min-height: 168px; font-size: 12px; color: var(--ink-2); line-height: 1.9; }
+.preloader__line { animation: pl-in .3s var(--ease); white-space: pre; }
+.preloader__line:last-child { color: var(--ink); }
+.preloader__bar { height: 2px; background: var(--line); margin-top: 22px; overflow: hidden; }
+.preloader__bar span { display: block; height: 100%; background: var(--acid); transition: width .18s linear; }
+.preloader__pct { position: absolute; right: 0; top: 0; font-size: 12px; color: var(--ink-3); }
+@keyframes pl-in { from { opacity: 0; transform: translateX(-6px) } to { opacity: 1; transform: none } }
