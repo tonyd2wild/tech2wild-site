@@ -20,7 +20,7 @@ export function Repos() {
           eyebrow="07 · Open Source"
           lines={['RECIPES,', 'NOT SECRETS.']}
           side={<>Every deployment in the lab ships as a reproducible repository: Docker images, launch flags, the patches that made it boot and the benchmarks that prove it. <strong>Fork it, run it, argue with the numbers.</strong></>}
-          meta={[`${githubProfile.publicRepos} public repos`, `${totalStars.toLocaleString()}+ stars on the recipes shown`, githubProfile.location]}
+          meta={[`${githubProfile.publicRepos} public repos`, `${totalStars.toLocaleString()}+ stars on the recipes shown`, `Snapshot ${githubProfile.asOf}`]}
         />
 
         <Reveal className="console" delay={0.1}>

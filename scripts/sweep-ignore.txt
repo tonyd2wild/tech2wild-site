@@ -1,0 +1,18 @@
+# Repos reviewed and intentionally not listed on tech2wild.com (one per line).
+# Superseded lanes, WIP forks of other people's recipes, empty or unrelated repos.
+# Remove a line if the repo becomes relevant again.
+Inkling-Small-NVFP4-DSpark-BF16-KV-262K-2x-DGX-Spark
+Inkling-Small-NVFP4-MTP-262K-2x-DGX-Spark
+DeepSeek-V4-Flash-Dual-Spark-Recipe
+DS4-Jasl-Sparkrun-GB10-Fix
+MiMo-V2.5-TP3-NVFP4-KV-3xDGX-Spark
+MiniMax-M3-AWQ-TP4-EAGLE3-4x-DGX-Spark
+MiniMax-M3-AWQ-1M-NVFP4-KV-4x-DGX-Spark
+MiMo-V2.5-DFlash-FP8-KV-2x-DGX-Spark
+GLM-5.2-NF3-Hybrid-4x-DGX-Spark-800kctx
+MiMo-V2.5-Omni-3x-DGX-Spark-TP-3-MTP
+MiMo-V2.5-NVFP4-2x-DGX-Sparks-TP-2
+Keys---Full-GLM-5.2-Quantrio-INT4-INT8-mixed-8bit-Attention-on-4-x-DGX-Spark-GB10-Cluster
+OpenClaw-Wiki-Recipe
+ChatGPT-Img2-OAuth
+OpenClaude

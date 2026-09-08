@@ -6,3 +6,4 @@ dist
 .env.*
 .vite
 .claude/launch.json
+.sweep/

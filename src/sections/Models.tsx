@@ -82,7 +82,7 @@ export function Models() {
           eyebrow="02 · Deployments"
           lines={['MODELS THAT', 'RUN AT HOME.']}
           side={<>Every card is a model Tech2Wild has actually served on lab hardware, with the quantization, engine and measured decode speed from the published recipe. <strong>Numbers are single-stream unless marked.</strong></>}
-          meta={[`${deployments.length} deployments`, '7 model families', 'vLLM · SGLang · llama.cpp']}
+          meta={[`${deployments.length} deployments`, '7 model families', 'vLLM · SGLang · llama.cpp · ExLlamaV3']}
         />
         <Reveal className="models__filters" delay={0.1}>
           {filters.map(x => (

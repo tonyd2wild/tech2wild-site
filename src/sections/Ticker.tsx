@@ -9,7 +9,8 @@ const stats: [string, string, string][] = [
   ['Laguna-S 2.1', '282 tok/s peak', 'DFlash · 4× 3090'],
   ['GLM-5.3 Flash TP4', '3.9M-token KV', '1M ctx · 4× Spark'],
   ['DeepSeek V4 TP4', '402 tok/s agg', 'c6 · 4× Spark'],
-  ['Qwen3.8 Flash-Next', '70.2 tok/s peak', 'NVFP4 · 2× Spark'],
+  ['Qwen3.8 Flash-Next', '193 tok/s', 'vLLM · W4A16 · 4× 3090'],
+  ['Qwen3.8 Flash-Next TP4', '9.09M-token KV', 'NVFP4 · 4× Spark'],
   ['MiniMax H3', '15 s video', '1× 3090 · 31 GB RAM'],
   ['2Wild Eval', '69 scenarios', '138 pts · fleet-wide'],
 ]

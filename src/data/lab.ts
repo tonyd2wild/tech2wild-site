@@ -61,7 +61,7 @@ export const labNodes: LabNode[] = [
     spec: ['4× NVIDIA RTX 3090 · 96 GB VRAM', 'Dual NVLink bridges', '31 GB system RAM · NVMe'],
     deployed: 'Qwen3.8-27B · AutoRound W4A16 · DFlash2 (TP2)',
     context: '131K → 234K tokens', quant: 'W4A16 · FP8 KV', speed: '101 tok/s real-agent · 253 structured',
-    project: 'The Ampere lane. Qwen3.8-27B on two of these cards took the #1 spot on the 69-scenario tool-calling eval over models up to 1T parameters. Laguna-S 2.1 hits 282 tok/s peak on all four.',
+    project: 'The Ampere lane. Qwen3.8-27B on two of these cards took the #1 spot on the 69-scenario tool-calling eval over models up to 1T parameters. On all four, Qwen3.8 Flash-Next decodes at 193 tok/s in vLLM with the n-gram table parked on NVMe, and Laguna-S 2.1 peaks at 282.',
     repo: 'Qwen3.8-27B-DFLASH2-AutoRound-W4A16-2x3090', video: 'hLge7d8og9Q',
   },
   {

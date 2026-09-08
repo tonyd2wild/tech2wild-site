@@ -54,14 +54,14 @@ export function Videos() {
           eyebrow="05 · Latest from Tech2Wild"
           lines={['THE BUILD LOG,', 'ON CAMERA.']}
           side={<>Every deployment gets documented as it happens: launch-day streams, benchmark breakdowns and the honest verdicts. <strong>Real footage from the lab, not stock renders.</strong></>}
-          meta={[`${channel.videoCount} videos`, 'Founded June 2025', 'youtube.com/@tech2wild1']}
+          meta={[`${channel.videoCount} videos`, 'Founded June 2025', `Stats as of ${channel.asOf}`]}
         />
 
         <Reveal className="videos__stats" stagger={0.08}>
           <div><span className="mono">Subscribers</span><b><Counter value={channel.subscribers} /></b></div>
           <div><span className="mono">Channel views</span><b><Counter value={channel.views} /></b></div>
-          <div><span className="mono">Subs growth · 1y</span><b>+<Counter value={channel.subsGrowth1y} decimals={0} />%</b></div>
-          <div><span className="mono">Views growth · 30d</span><b>+<Counter value={channel.viewsGrowth30d} decimals={0} />%</b></div>
+          <div><span className="mono">New subs · 30d</span><b>+<Counter value={channel.subsGained30d} /></b></div>
+          <div><span className="mono">Views · 30d</span><b>+<Counter value={channel.viewsGained30d} /></b></div>
         </Reveal>
 
         <div className="videos__mosaic">
