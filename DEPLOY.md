@@ -15,6 +15,28 @@ The site is a static Vite build (`npm run build` → `dist/`). The domain stays 
 | Pages custom domains | `tech2wild.com` and `www.tech2wild.com` **Active, SSL enabled** |
 | Live check | <https://tech2wild.com> and <https://www.tech2wild.com> → 200; `http://` → 301 to https |
 
+## Join the Lab form (collaborator applications)
+
+| Piece | Where |
+|---|---|
+| Public link | <https://tech2wild.com/join> (lands on the `#join` section) |
+| Front end | `src/sections/Join.tsx` — fields, chips, Turnstile widget, honeypot |
+| API | `functions/api/apply.ts` → `POST /api/apply` (Cloudflare Pages Function) |
+| Bot check | Cloudflare Turnstile widget `tech2wild-join` (hostnames tech2wild.com + tech2wild-site.pages.dev). Site key in `src/data/config.ts`; secret in Pages → Settings → Variables as `TURNSTILE_SECRET` |
+| Storage | D1 database `tech2wild-lab` (id `4a79850c-b517-420a-8e28-7a9a3209574d`), table `applications`, bound as `DB` via `wrangler.toml`. Schema auto-creates on first request |
+| Vetting | The function pulls the applicant's public GitHub (age, repos, stars, followers, last push, local-AI keywords) and stores `gh_score` (0–100) + `gh_summary` + raw `gh_json` |
+| Discord | Optional: set `DISCORD_WEBHOOK` (Pages secret) and every application posts an embed card with the vet score |
+| GitHub rate limit | Optional: set `GITHUB_TOKEN` (Pages secret, read-only PAT) to raise the 60/h unauthenticated limit |
+| Duplicates | Same email or GitHub login is rejected with 409 |
+
+Read applications: Cloudflare dashboard → Workers & Pages → D1 → `tech2wild-lab` → Console:
+
+```sql
+SELECT id, created_at, status, name, email, x_handle, github, gh_score, gh_summary, lanes, hours FROM applications ORDER BY created_at DESC;
+```
+
+Approve someone: invite their GitHub login to the right team in the `Tech2wild` org (<https://github.com/Tech2wild>) and give them the Discord role, then `UPDATE applications SET status='approved' WHERE id='…'`.
+
 ## Verify at any time
 
 ```bash
