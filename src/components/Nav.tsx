@@ -6,7 +6,7 @@ import { githubUrl } from '../data/repos'
 import './nav.css'
 
 const links = [
-  ['Lab', '#lab'], ['Models', '#models'], ['Benchmarks', '#benchmarks'], ['Experiments', '#experiments'], ['Videos', '#videos'], ['Feed', '#feed'], ['GitHub', '#github'],
+  ['Lab', '#lab'], ['Models', '#models'], ['Benchmarks', '#benchmarks'], ['Experiments', '#experiments'], ['Videos', '#videos'], ['Feed', '#feed'], ['GitHub', '#github'], ['Join', '#join'],
 ]
 
 export function Nav() {

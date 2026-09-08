@@ -13,8 +13,10 @@ import { Videos } from './sections/Videos'
 import { Feed } from './sections/Feed'
 import { Manifesto } from './sections/Manifesto'
 import { Repos } from './sections/Repos'
+import { Join } from './sections/Join'
 import { Footer } from './sections/Footer'
-import { useLenis } from './hooks/useLenis'
+import { useLenis, scrollToTarget } from './hooks/useLenis'
+import { JOIN_PATH } from './data/config'
 import { useReducedMotion } from './hooks/useMotion'
 
 export default function App() {
@@ -26,6 +28,19 @@ export default function App() {
   useEffect(() => {
     if (reduced) setReady(true)
   }, [reduced])
+
+  // tech2wild.com/join is the shareable link: land on the form, then tidy the URL.
+  useEffect(() => {
+    if (!ready) return
+    const path = window.location.pathname.replace(/\/+$/, '')
+    if (path === JOIN_PATH || window.location.hash === '#join') {
+      const t = setTimeout(() => {
+        scrollToTarget('#join', -40)
+        if (path === JOIN_PATH) window.history.replaceState(null, '', '/#join')
+      }, 900)
+      return () => clearTimeout(t)
+    }
+  }, [ready])
 
   useEffect(() => {
     const refresh = () => ScrollTrigger.refresh()
@@ -62,6 +77,7 @@ export default function App() {
         <Feed />
         <Manifesto />
         <Repos />
+        <Join />
       </main>
       <Footer />
       <Cursor />

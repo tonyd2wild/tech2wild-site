@@ -22,7 +22,7 @@ export function Footer() {
           <div className="foot__cols">
             <div>
               <span className="foot__h mono">Site</span>
-              {[['Lab', '#lab'], ['Models', '#models'], ['Benchmarks', '#benchmarks'], ['Experiments', '#experiments'], ['Videos', '#videos'], ['Feed', '#feed'], ['GitHub', '#github']].map(([l, h]) => (
+              {[['Lab', '#lab'], ['Models', '#models'], ['Benchmarks', '#benchmarks'], ['Experiments', '#experiments'], ['Videos', '#videos'], ['Feed', '#feed'], ['GitHub', '#github'], ['Join the Lab', '#join']].map(([l, h]) => (
                 <a key={h} href={h} onClick={(e) => { e.preventDefault(); scrollToTarget(h) }}>{l}</a>
               ))}
             </div>
