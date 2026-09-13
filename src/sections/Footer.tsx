@@ -1,8 +1,11 @@
 import { channel } from '../data/videos'
 import { xProfile } from '../data/posts'
-import { githubUrl, hfWeights } from '../data/repos'
+import { githubProfile, githubUrl, hfWeights } from '../data/repos'
 import { scrollToTarget } from '../hooks/useLenis'
 import './footer.css'
+
+// Newest snapshot date across the data files; the sweep bumps these, so the stamp moves with every content update.
+const dataUpdated = [channel.asOf, githubProfile.asOf].sort().reverse()[0]
 
 export function Footer() {
   return (
@@ -49,6 +52,7 @@ export function Footer() {
         </div>
         <div className="foot__bottom mono">
           <span>© 2026 Tech2Wild · Tonyd2wild LLC · Building with it, not just talking about it.</span>
+          <span className="foot__stamp">Data updated {dataUpdated}</span>
           <span>Numbers on this site come from published recipes and posts · Not affiliated with NVIDIA, DeepSeek, Zhipu, Alibaba or MiniMax</span>
         </div>
       </div>

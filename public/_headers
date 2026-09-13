@@ -1,6 +1,10 @@
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
+# Security headers on everything.
+#
+# No long-lived Cache-Control on /assets/* on purpose. Cloudflare Pages answers a request for a file that is not in
+# the serving deployment with the SPA fallback (index.html, HTTP 200). During a deploy, a request for a new hashed
+# bundle can reach a data center that is still on the old deployment. With "public, max-age=31536000, immutable"
+# that fallback HTML was cached at the edge under the JS URL and the site stopped rendering (2026-09-13).
+# Pages' default (ETag revalidation) is fast and can't be poisoned for a year.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY

@@ -127,11 +127,21 @@ git commit -m "Sweep YYYY-MM-DD: <what changed in one line>"
 git push
 ```
 
-Then confirm the deploy (the CSS bundle hash changes when the deploy lands):
+Then confirm the deploy landed **and that the bundle tech2wild.com serves is really JavaScript**. During a deploy Cloudflare can cache the HTML fallback page under a new JS URL. The site then stops rendering while `www.` and `*.pages.dev` look fine (see the note in `public/_headers`).
 
 ```bash
-curl -s https://tech2wild.com/ | grep -o 'assets/index-[^"]*\.css'
+js=$(curl -s https://tech2wild.com/ | grep -o 'assets/index-[^"]*\.js')
+curl -sI "https://tech2wild.com/$js" | grep -i content-type    # must be application/javascript
 ```
+
+PowerShell:
+
+```powershell
+$js = [regex]::Match(((curl.exe -s https://tech2wild.com/) -join "`n"), 'assets/index-[^"]+\.js').Value
+curl.exe -sI "https://tech2wild.com/$js" | Select-String content-type
+```
+
+If it says `text/html`, the edge cached the fallback. Push any change that alters the app code, because a new file hash sidesteps the bad cache entry. Then check again. Also check the footer: it shows "Data updated YYYY-MM-DD" from the data files.
 
 If it hasn't changed after 8 minutes, check the Pages project's Deployments tab in the Cloudflare dashboard for a failed build and fix the error.
 

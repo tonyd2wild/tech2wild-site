@@ -11,3 +11,4 @@
 .foot__cols a:hover { color: var(--acid); }
 .foot__word { display: flex; justify-content: center; font-family: var(--f-display); font-weight: 800; font-size: clamp(64px, 17vw, 300px); letter-spacing: -0.06em; line-height: .85; color: var(--ink); font-variation-settings: 'wdth' 85; user-select: none; -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent); mask-image: linear-gradient(to bottom, #000 50%, transparent); }
 .foot__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.foot__stamp { color: var(--acid); }

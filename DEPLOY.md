@@ -37,6 +37,14 @@ SELECT id, created_at, status, name, email, x_handle, github, gh_score, gh_summa
 
 Approve someone: invite their GitHub login to the right team in the `Tech2wild` org (<https://github.com/Tech2wild>) and give them the Discord role, then `UPDATE applications SET status='approved' WHERE id='…'`.
 
+## Known trap: poisoned bundle on the apex (2026-09-13)
+
+After the 2026-09-13 deploy, `https://tech2wild.com/assets/index-<hash>.js` came back as **HTML** from Cloudflare's edge cache (`cf-cache-status: HIT`, `content-type: text/html`). `www.` and `*.pages.dev` served the real JS, so everything looked deployed while the apex site could not run its script.
+
+Cause: a request for the new bundle reached a data center still on the previous deployment. Pages answers unknown paths with the SPA fallback (`index.html`, 200). `public/_headers` then gave `/assets/*` a one-year `immutable` cache, so the edge kept the HTML.
+
+Fix: the long-lived `/assets/*` rule is gone. If it ever happens again, ship any code change (a new hash sidesteps the bad entry) or purge the zone cache. Purging needs a token with **Zone → Cache Purge**; the `.env` token does not have it. Always verify the served bundle's content-type, not just its filename (see `skills/tech2wild-site-sweep/SKILL.md` step 8).
+
 ## Verify at any time
 
 ```bash
