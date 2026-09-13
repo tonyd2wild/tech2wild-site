@@ -3,7 +3,7 @@ export type Hardware = '1x DGX Spark' | '2x DGX Spark' | '4x DGX Spark' | '2x RT
 export interface Deployment {
   id: string
   model: string
-  family: 'DeepSeek' | 'GLM' | 'Qwen' | 'MiniMax' | 'MiMo' | 'Hunyuan' | 'poolside'
+  family: 'DeepSeek' | 'GLM' | 'Qwen' | 'MiniMax' | 'MiMo' | 'Hunyuan' | 'poolside' | 'Nex'
   params: string
   active?: string
   quant: string
@@ -26,6 +26,38 @@ export interface Deployment {
 
 export const deployments: Deployment[] = [
   {
+    id: 'ds41-exl3-tp4',
+    model: 'DeepSeek V4.1 Flash · EXL3',
+    family: 'DeepSeek',
+    params: '552B', active: '16B',
+    quant: 'EXL3 3.5 bpw · Engram tables on disk',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · patched (Engram on disk)',
+    tps: 46.4, tpsNote: 'code, single-stream · default lane since 2026-09-11',
+    aggregate: 141.2, aggregateNote: 'c6 aggregate',
+    context: 300_000, kvPool: 3_304_863,
+    status: 'LIVE',
+    repo: 'DeepSeek-V4.1-Flash-vLLM-DGX-Spark', stars: 60,
+    spec: '11 full 300K-token requests fit at once · 1,026 tok/s cold prefill at 93K',
+    highlight: 'Context lane: a 3.3M-token KV pool on four Sparks',
+    video: 'zHyd_JbrK8s',
+  },
+  {
+    id: 'ds41-mxfp4-tp4',
+    model: 'DeepSeek V4.1 Flash',
+    family: 'DeepSeek',
+    params: '552B', active: '16B',
+    quant: 'MXFP4 experts · MXFP8 dense',
+    hardware: '4x DGX Spark', engine: 'vLLM TP4 · DSpark k=5',
+    tps: 73.8, tpsNote: 'code, single-stream (prose 24.4 · math 50.9)',
+    aggregate: 131.9, aggregateNote: 'c6 aggregate (code peak 225.5)',
+    context: 300_000, kvPool: 1_070_168,
+    status: 'RECIPE',
+    repo: 'DeepSeek-V4.1-Flash-vLLM-DGX-Spark', stars: 60,
+    spec: '203 GB of Engram tables read from disk on demand · prebuilt sm121 kernels · 1M context proven',
+    highlight: 'A 552B model that does not fit four GB10s as shipped',
+    video: 'zHyd_JbrK8s',
+  },
+  {
     id: 'ds4-vision-2spark',
     model: 'DeepSeek V4 Flash Vision',
     family: 'DeepSeek',
@@ -36,7 +68,7 @@ export const deployments: Deployment[] = [
     aggregate: 197.3, aggregateNote: 'c6 aggregate',
     context: 1_048_576, kvPool: 2_040_000,
     status: 'LIVE',
-    repo: 'DeepSeek-v4-Flash-Vision-Exp-DSpark-1M-NVFP4-KV-2x-DGX-Spark', stars: 476,
+    repo: 'DeepSeek-v4-Flash-Vision-Exp-DSpark-1M-NVFP4-KV-2x-DGX-Spark', stars: 478,
     spec: 'DSpark speculative decoding · B12X MoE kernels',
     highlight: 'Full 1M context with native vision on two Sparks',
     video: '0EIt9SdD8is',
@@ -82,7 +114,7 @@ export const deployments: Deployment[] = [
     aggregate: 56.2, aggregateNote: 'c5 aggregate',
     context: 262_144, kvPool: 581_040,
     status: 'LIVE',
-    repo: 'GLM-5.3-Flash-NVFP4-DFlash2-2x-DGX-Spark', stars: 160,
+    repo: 'GLM-5.3-Flash-NVFP4-DFlash2-2x-DGX-Spark', stars: 163,
     spec: 'DFlash2 drafter · 74.1% acceptance · 2.15x over MTP-4',
     highlight: 'First fp8 KV on consumer Blackwell for a NoPE-MLA model',
     video: 'bD1jCH5c32g',
@@ -126,7 +158,7 @@ export const deployments: Deployment[] = [
     aggregate: 46.03, aggregateNote: 'c6 aggregate (MTP-4)',
     context: 300_000, kvPool: 317_278,
     status: 'RECIPE',
-    repo: 'GLM-5.3-Int4-Int8Mix-TP4-4x-DGX-Spark', stars: 14,
+    repo: 'GLM-5.3-Int4-Int8Mix-TP4-4x-DGX-Spark', stars: 13,
     spec: '1507 GB BF16 → 377.4 GiB · 282 shards · weights on HF',
     highlight: 'A frontier-scale 743B model served on four desktop boxes',
   },
@@ -169,7 +201,7 @@ export const deployments: Deployment[] = [
     aggregate: 68.8, aggregateNote: 'c6 aggregate',
     context: 262_144, kvPool: 1_027_392,
     status: 'LIVE',
-    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 83,
+    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 95,
     spec: 'Disk-backed 47.7 GiB PLE table · staged gather · 300 ms TTFT',
     highlight: 'A 125B model on one Spark with a 1M-token KV pool',
     video: 'RcNAu_Bpn8s',
@@ -185,7 +217,7 @@ export const deployments: Deployment[] = [
     aggregate: 97.9, aggregateNote: 'c6 aggregate',
     context: 262_144, kvPool: 5_874_061,
     status: 'LIVE',
-    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 83,
+    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 95,
     spec: 'Two profiles: SPEED (1.97M KV) or CONTEXT (5.87M KV) · SGLang day-0 lane kept',
     highlight: 'Day-0 deployment, then rebuilt on vLLM with the n-gram table patch',
     video: 'z8xlSd1d99A',
@@ -201,7 +233,7 @@ export const deployments: Deployment[] = [
     aggregate: 87.4, aggregateNote: 'c6 aggregate',
     context: 262_144, kvPool: 9_088_133,
     status: 'RECIPE',
-    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 83,
+    repo: 'Qwen3.8-Flash-Next-NVFP4-DGX-Spark', stars: 95,
     spec: '2,453 tok/s cold prefill at 28K · 9.09M-token KV pool',
     highlight: 'The largest KV pool in the lab',
   },
@@ -216,7 +248,7 @@ export const deployments: Deployment[] = [
     aggregate: 317, aggregateNote: '6 agents sustained (570 burst)',
     context: 262_144,
     status: 'LIVE',
-    repo: 'Qwen38-Flash-Next-4x3090', stars: 5,
+    repo: 'Qwen38-Flash-Next-4x3090', stars: 6,
     spec: 'llama.cpp lane 2: 96–102 tok/s with the unsloth MTP head, 2 full-context slots',
     highlight: 'Four Ampere cards now beat every Spark lane on this model',
     video: 'RcNAu_Bpn8s',
@@ -231,7 +263,7 @@ export const deployments: Deployment[] = [
     tps: 101.1, tpsPeak: 252.9, tpsNote: 'real-agent / structured output',
     context: 131_072, kvPool: 258_735,
     status: 'LIVE',
-    repo: 'Qwen3.8-27B-DFLASH2-AutoRound-W4A16-2x3090', stars: 15,
+    repo: 'Qwen3.8-27B-DFLASH2-AutoRound-W4A16-2x3090', stars: 16,
     spec: '★★★★★ #1 on the 69-scenario 2Wild eval · Quality 97.1',
     highlight: 'The 27B dense model that topped the whole local fleet',
     video: 'd31KL5Fc-EM',
@@ -291,6 +323,20 @@ export const deployments: Deployment[] = [
     spec: 'First published Hy3 recipe on GB10',
   },
   {
+    id: 'nex25mini-2x3090',
+    model: 'Nex-N2.5-mini',
+    family: 'Nex',
+    params: '35B', active: '3B',
+    quant: 'Int4-Int8Mix (data-free) · fp8 KV',
+    hardware: '2x RTX 3090', engine: 'vLLM TP2 · no drafter',
+    tps: 186, tpsNote: 'code, undrafted (prose 187 · counting 185)',
+    context: 262_144, kvPool: 1_867_521,
+    status: 'LIVE',
+    repo: 'Nex-N2.5-mini-Int4-Int8Mix-2x-RTX-3090', stars: 0,
+    spec: '87.0 on the 69-scenario eval · 67/100 agency · vision on',
+    highlight: '186 tok/s with no speculative decoding at all',
+  },
+  {
     id: 'laguna',
     model: 'Laguna-S 2.1 (poolside)',
     family: 'poolside',
@@ -314,7 +360,7 @@ export const deployments: Deployment[] = [
     tps: 19.3, tpsPeak: 21.6, tpsNote: 'mean / peak',
     context: 32_768,
     status: 'ARCHIVED',
-    repo: 'GLM5.2-2bit-2-DGX-Spark--21.5tok-s', stars: 40,
+    repo: 'GLM5.2-2bit-2-DGX-Spark--21.5tok-s', stars: 39,
     spec: 'A 750B-class model squeezed onto two boxes',
   },
 ]
@@ -337,6 +383,7 @@ export const familyAccent: Record<Deployment['family'], string> = {
   MiMo: '#B98CFF',
   Hunyuan: '#3DFFD5',
   poolside: '#FFD23D',
+  Nex: '#EDEDE4',
 }
 
 export const fmtTokens = (n: number) => {

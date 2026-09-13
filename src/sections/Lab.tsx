@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { SectionHead } from '../components/SectionHead'
 import { Reveal } from '../components/Reveal'
 import { labNodes, labLinks, type LabNode } from '../data/lab'
-import { repoUrl } from '../data/repos'
+import { githubProfile, repoUrl } from '../data/repos'
 import { watchUrl } from '../data/videos'
 import './lab.css'
 
@@ -23,7 +23,7 @@ export function Lab() {
           eyebrow="01 · The Lab"
           lines={['A DATACENTER', 'THAT FITS ON', 'A DESK.']}
           side={<>Four NVIDIA DGX Sparks on a 200GbE RoCE fabric, a quad RTX 3090 rig on NVLink, and an agent layer that runs on all of it. <strong>Hover or tap a node to open its deployment sheet.</strong></>}
-          meta={['4× GB10 · 512 GB unified', '4× RTX 3090 · 96 GB VRAM', '63 public recipes']}
+          meta={['4× GB10 · 512 GB unified', '4× RTX 3090 · 96 GB VRAM', `${githubProfile.publicRepos} public repos`]}
         />
 
         <div className="lab__layout">

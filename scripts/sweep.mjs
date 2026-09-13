@@ -114,14 +114,48 @@ async function sweepGithub() {
 }
 
 // ---------------------------------------------------------------- YouTube
-async function sweepYoutube() {
-  log('## YouTube (Tech2WiLD)')
-  const xml = await (await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL}`)).text()
+async function listUploads() {
+  const key = process.env.YOUTUBE_API_KEY
+  if (key) {
+    const uploads = 'UU' + YT_CHANNEL.slice(2)
+    const r = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=25&playlistId=${uploads}&key=${key}`)
+    if (!r.ok) throw new Error(`YouTube Data API playlistItems returned HTTP ${r.status}`)
+    const j = await r.json()
+    const entries = (j.items ?? []).map((it) => ({
+      id: it.contentDetails.videoId,
+      title: it.snippet.title,
+      published: (it.contentDetails.videoPublishedAt ?? it.snippet.publishedAt).slice(0, 10),
+    }))
+    if (!entries.length) throw new Error('YouTube Data API returned an empty uploads playlist')
+    return entries
+  }
+  const r = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL}`)
+  if (!r.ok) throw new Error(`YouTube RSS feed returned HTTP ${r.status}`)
+  const xml = await r.text()
   const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => ({
     id: m[1].match(/<yt:videoId>([^<]+)/)?.[1],
     title: decode(m[1].match(/<title>([^<]*)/)?.[1] ?? ''),
     published: m[1].match(/<published>([^<]+)/)?.[1]?.slice(0, 10),
   })).filter((e) => e.id)
+  if (!entries.length) throw new Error('YouTube RSS feed returned no entries')
+  return entries
+}
+
+async function sweepYoutube() {
+  log('## YouTube (Tech2WiLD)')
+  // Upload list: the Data API uploads playlist when a key is set (reliable), otherwise the public RSS feed.
+  // Either source failing must be LOUD. An empty list is never reported as "no new videos"
+  // (2026-09-13: the RSS feed started returning 404 and the sweep silently reported "no new videos").
+  let entries
+  try {
+    entries = await listUploads()
+  } catch (e) {
+    log(`- ⚠ VIDEO CHECK FAILED: ${e.message}. New uploads were NOT checked.`)
+    log('  → Set YOUTUBE_API_KEY in .env (uses the uploads playlist, not RSS), or take the latest long-form uploads')
+    log('    from vidIQ / the channel page and add them to src/data/videos.ts by hand.')
+    log()
+    return
+  }
   let videosTs = read('src/data/videos.ts')
   const known = new Set([...videosTs.matchAll(/id: '([^']+)'/g)].map((m) => m[1]))
   const fresh = entries.filter((e) => !known.has(e.id))

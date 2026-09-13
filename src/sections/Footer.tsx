@@ -33,7 +33,7 @@ export function Footer() {
               <a href={xProfile.url} target="_blank" rel="noreferrer">X · @Tech2Wild</a>
               <a href="https://x.com/ToNYD2WiLD" target="_blank" rel="noreferrer">X · @ToNYD2WiLD</a>
               <a href={githubUrl} target="_blank" rel="noreferrer">GitHub · tonyd2wild</a>
-              <a href={hfWeights} target="_blank" rel="noreferrer">Hugging Face · 2wild4tv</a>
+              <a href={hfWeights} target="_blank" rel="noreferrer">Hugging Face · Tech2wild</a>
               <a href="https://discord.gg/8SvaFjJKbY" target="_blank" rel="noreferrer">Discord · 2Wild FAM</a>
             </div>
             <div>

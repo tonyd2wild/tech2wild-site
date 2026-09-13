@@ -135,4 +135,21 @@ export const experiments: Experiment[] = [
     post: 'https://x.com/Tech2Wild/status/2089003239941292403',
     accent: '#FF5C2A',
   },
+  {
+    n: '08', slug: 'engram-on-disk',
+    title: 'A 552B model that did not fit, served anyway',
+    kicker: 'DeepSeek V4.1 Flash · Engram tables on disk',
+    hardware: '4× DGX Spark (GB10) · vLLM TP4',
+    model: 'DeepSeek V4.1 Flash · 552B MoE (769B with Engram) / 16B active',
+    body: 'DeepSeek V4.1 Flash does not fit four GB10s as shipped. The fix keeps its 203 GB of Engram n-gram tables inside the safetensors files and reads rows on demand, with node-local row copies on each worker, prebuilt sm121 kernels instead of runtime JIT, and CUDA graphs captured at exact sizes so DSpark batches are never padded. The release lane decodes code at 73.8 tok/s. The default EXL3 3.5 bpw lane trades speed for a 3.3M-token KV pool, eleven full 300K-token requests at once.',
+    results: [
+      { label: 'Code decode', value: '73.8 tok/s' },
+      { label: 'KV pool (EXL3)', value: '3.3M tokens' },
+      { label: 'Engram on disk', value: '203 GB' },
+      { label: 'Context', value: '300K · 1M proven' },
+    ],
+    repo: 'DeepSeek-V4.1-Flash-vLLM-DGX-Spark',
+    video: 'zHyd_JbrK8s',
+    accent: '#4FA3FF',
+  },
 ]

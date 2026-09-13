@@ -2,6 +2,9 @@ import { Marquee } from '../components/Marquee'
 import './ticker.css'
 
 const stats: [string, string, string][] = [
+  ['DeepSeek V4.1 Flash', '73.8 tok/s', '552B · code · 4× Spark'],
+  ['DeepSeek V4.1 EXL3', '3.3M-token KV', '300K ctx · 4× Spark'],
+  ['Nex-N2.5-mini', '186 tok/s', 'no drafter · 2× 3090'],
   ['DeepSeek V4 Flash', '84.3 tok/s', '1M ctx · 2× Spark'],
   ['GLM-5.3 Flash', '60.6 tok/s peak', 'DFlash2 · 2× Spark'],
   ['Qwen3.8-27B', '101 tok/s', 'real-agent · 2× 3090'],

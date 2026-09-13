@@ -35,10 +35,10 @@ export const labNodes: LabNode[] = [
   {
     id: 'spark-03', code: 'SPK-03', name: 'DGX Spark · Node 03', kind: 'spark', x: 58, y: 26,
     spec: ['NVIDIA GB10 Grace Blackwell', '128 GB unified memory', 'TP4 rank 2'],
-    deployed: 'GLM-5.3 Flash · TP4 across four Sparks',
-    context: '1,048,576 tokens native', quant: 'NVFP4 · fp8 KV @ 24 GiB/rank', speed: '~55 tok/s structured · 36 MTP',
-    project: 'First TP4 glm5_next outside B200 hardware. A page-cache study found the GB10 memory wall was the flusher, not the allocator; unlocking it grew the KV pool to 3.9M tokens.',
-    repo: 'GLM-5.3-Flash-NVFP4-1M-KV-4x-DGX-Spark',
+    deployed: 'DeepSeek V4.1 Flash · EXL3 3.5 bpw · TP4 across four Sparks (live)',
+    context: '300K served · 1M proven', quant: 'EXL3 3.5 bpw · 203 GB Engram tables on disk', speed: '46.4 tok/s code · 141 tok/s at 6 streams',
+    project: 'A 552B model that does not fit four GB10s as shipped. The Engram n-gram tables stay in the safetensors files and rows are read on demand, which leaves a 3.3M-token KV pool: eleven full 300K-token requests at once. The release lane on the same four boxes decodes code at 73.8 tok/s.',
+    repo: 'DeepSeek-V4.1-Flash-vLLM-DGX-Spark', video: 'zHyd_JbrK8s',
   },
   {
     id: 'spark-04', code: 'SPK-04', name: 'DGX Spark · Node 04', kind: 'spark', x: 76, y: 18,

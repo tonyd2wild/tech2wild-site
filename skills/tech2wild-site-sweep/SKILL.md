@@ -78,7 +78,11 @@ If a number in the README is a range, use the low end and say so in `tpsNote`. I
 
 ### 4. Videos (`src/data/videos.ts`)
 
-Paste the suggested lines from the report at the **top** of the `videos` array (newest first). Rules:
+Paste the suggested lines from the report at the **top** of the `videos` array (newest first).
+
+If the report says **VIDEO CHECK FAILED**, new uploads were not checked at all. That is not the same as "no new videos". The public RSS feed can return 404 for days at a time. Either add `YOUTUBE_API_KEY` to `.env` (the sweep then reads the uploads playlist through the Data API), or pull the latest long-form uploads from vidIQ or the channel page and add them by hand.
+
+Rules:
 - Skip Shorts (< 60 s) and anything not about AI/hardware (unboxings of unrelated gear).
 - `category` from the title; `duration` as `m:ss` or `h:mm:ss`; `views` if known (round numbers are fine).
 - `featured: true` on at most two of the new ones (launch-day deployments, big benchmarks, hardware builds). Keep 6–8 featured total; un-feature older ones if needed.

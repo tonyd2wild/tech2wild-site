@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SectionHead } from '../components/SectionHead'
 import { Reveal, RevealLines } from '../components/Reveal'
 import { experiments, type Experiment } from '../data/experiments'
-import { repoUrl } from '../data/repos'
+import { githubProfile, repoUrl } from '../data/repos'
 import { thumb, watchUrl } from '../data/videos'
 import { useReducedMotion } from '../hooks/useMotion'
 import './experiments.css'
@@ -62,7 +62,7 @@ export function Experiments() {
           eyebrow="04 · Experiments from the Lab"
           lines={['THINGS THAT', "WEREN'T SUPPOSED", 'TO RUN HERE.']}
           side={<>Each experiment is a published recipe with a measured result: the hardware, the model, what broke, and what it took to make it work. <strong>All numbers come from the repo READMEs and posts.</strong></>}
-          meta={['7 featured', '63 repos total', 'Every one reproducible']}
+          meta={[`${experiments.length} featured`, `${githubProfile.publicRepos} repos total`, 'Every one reproducible']}
         />
         <div className="exp__list">
           {experiments.map((e, i) => (
